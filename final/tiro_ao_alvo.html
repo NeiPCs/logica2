@@ -1,0 +1,74 @@
+<meta charset="UTF-8" />
+<h3>Pontos: <span id="pontos">0</span></h3>
+<canvas id="tela" width="600" height="400"></canvas>
+
+<script>
+var tela = document.getElementById("tela");
+var c = tela.getContext("2d");
+
+var adicionaPontos = function(valor){
+    var pontos = document.getElementById("pontos");
+    pontos.innerHTML = parseInt(pontos.innerHTML) + valor;
+}
+
+var circulo = function(x, y, raio) {
+    c.beginPath();
+    c.arc(x, y, raio, 0, 2 * Math.PI);
+    c.stroke();
+}
+
+var cor = function(cor) {
+    c.strokeStyle = cor;
+}
+
+var sorteia = function(max) {
+    return Math.round(Math.random() * max);
+}
+
+var limpa = function() {
+    c.clearRect(0, 0, tela.width, tela.height);
+}
+var desenhaAlvo = function(x, y) {
+    var raio = 40;
+    cor("white");
+    circulo(x, y, raio);
+    cor("red");
+    circulo(x, y, raio - 10);
+    cor("white");
+    circulo(x, y, raio - 20);
+    cor("red");
+    circulo(x, y, raio - 30);
+};
+
+var alvoX;
+var alvoY;
+var intervalo = 1;
+var raio = 10;
+
+var desenha = function() {
+    limpa();
+    alvoX = sorteia(600);
+    alvoY = sorteia(400);
+    desenhaAlvo(alvoX, alvoY);
+
+}
+
+tela.onclick = function(evento){
+    var x = evento.pageX - tela.offsetLeft;
+    var y = evento.pageY - tela.offsetTop;
+    if (x == alvoX && y == alvoY) {
+    	alert("Parabéns!!! Você acertou na mosca e ganhou 100 pontos!");
+        adicionaPontos(100);
+    } else if ((x > alvoX - raio) && (x < alvoX + raio) && 
+        (y > alvoY - raio) && (y < alvoY + raio)) {
+            alert("Ótimo! Ganhou 50 pontos!");
+            adicionaPontos(50);
+    } else if ((x > alvoX - (raio+10)) && (x < alvoX + (raio+10)) && 
+        (y > alvoY - (raio+10)) && (y < alvoY + (raio+10))) {
+            alert("Bom! Ganhou 10 pontos");
+            adicionaPontos(10);
+    }
+}
+
+setInterval(desenha, intervalo * 10000);
+</script>
